@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    height: 100vh;
+    box-sizing: border-box;
+  }
+  body {
+    height: 100vh;
+    @apply bg-[#f6f9fc];
+  }
+
+  button[disabled] {
+    @apply cursor-not-allowed;
+    @apply bg-gray-400/80;
+    @apply hover:bg-gray-400/80;
+  }
+}
+
+@layer utilities {
+  @variants responsive {
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  }
+}

@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - C:/databases/mongodb/organic-farms:/data/db
+
+  backend:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./backend
+    container_name: backend
+    restart: always
+    ports:
+      - '4000:4000'
+    env_file:
+      - ./backend/.env.development
+    volumes:
+      - ./backend:/backend
+      - /backend/node_modules
+    depends_on:
+      - mongodb
+
+  admin:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./admin
+    container_name: admin
+    ports:
+      - '3001:3001'
+    env_file:
+      - ./admin/.env.development
+    volumes:
+      - ./admin:/admin
+      - /admin/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
+
+  client:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    container_name: client
+    ports:
+      - '3000:3000'
+    env_file:
+      - ./client/.env.development
+    volumes:
+      - ./client:/client
+      - /client/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
